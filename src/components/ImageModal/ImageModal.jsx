@@ -1,0 +1,5 @@
+// import s from "./ImageModal.module.css";
+
+export default function ImageModal() {
+  return;
+}
