@@ -1,5 +1,3 @@
-import s from "./ErrorMessage.module.css";
-
-export default function ErrorMessage({}) {
-  return;
+export default function ErrorMessage() {
+  return <h2>Something went wrong! Try again...</h2>;
 }

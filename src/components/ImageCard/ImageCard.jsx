@@ -1,9 +1,14 @@
-// import s from "./ImageCard.module.css";
+import s from "./ImageCard.module.css";
 
-export default function ImageCard({ item }) {
+export default function ImageCard({ item, openModal }) {
   return (
     <div>
-      <img src={item.urls.small} alt={item.alt_description} />
+      <img
+        className={s.img}
+        src={item.urls.small}
+        alt={item.alt_description}
+        onClick={() => openModal(item.urls.regular, item.alt_description)}
+      />
     </div>
   );
 }

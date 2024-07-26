@@ -1,5 +1,3 @@
-// import s from "./SearchBar.module.css";
-
 import toast from "react-hot-toast";
 
 export default function SearchBar({ setQuery }) {
@@ -11,7 +9,7 @@ export default function SearchBar({ setQuery }) {
         duration: 2000,
         style: {
           border: "1px solid #713200",
-          padding: "16px",
+          padding: "8px",
           color: "#713200",
         },
       });
