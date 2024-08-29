@@ -1,6 +1,18 @@
 import Modal from "react-modal";
 
-export default function ImageModal({ modalIsOpen, onCloseModal, src, alt }) {
+interface ImageModalProps {
+  modalIsOpen: boolean;
+  onCloseModal: () => void;
+  src: string;
+  alt: string;
+}
+
+export default function ImageModal({
+  modalIsOpen,
+  onCloseModal,
+  src,
+  alt,
+}: ImageModalProps) {
   const customStyles = {
     content: {
       top: "50%",
@@ -17,7 +29,6 @@ export default function ImageModal({ modalIsOpen, onCloseModal, src, alt }) {
 
   return (
     <Modal
-      Modal
       isOpen={modalIsOpen}
       onRequestClose={onCloseModal}
       style={customStyles}

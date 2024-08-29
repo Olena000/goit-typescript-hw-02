@@ -1,6 +1,14 @@
 import axios from "axios";
+import { FetchImagesResponse } from "../components/App/App";
 
-export const fetchImages = async (query, page = 1) => {
+interface FetchImagesError {
+  error: string;
+}
+
+export const fetchImages = async (
+  query: string,
+  page: number = 1
+): Promise<FetchImagesResponse | FetchImagesError> => {
   if (!query) {
     return { error: "Query parameter is required" };
   }
@@ -10,7 +18,7 @@ export const fetchImages = async (query, page = 1) => {
   axios.defaults.baseURL = "https://api.unsplash.com";
   axios.defaults.headers.common["Authorization"] = `Client-ID ${API_KEY}`;
 
-  const response = await axios.get("/search/photos", {
+  const response = await axios.get<FetchImagesResponse>("/search/photos", {
     params: {
       query,
       per_page: 6,

@@ -8,15 +8,34 @@ import toast, { Toaster } from "react-hot-toast";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import ImageModal from "../ImageModal/ImageModal";
 
+export interface Image {
+  id: string;
+  alt_description: string;
+  urls: {
+    small: string;
+    regular: string;
+  };
+}
+
+interface ModalInfo {
+  src: string;
+  alt: string;
+}
+
+export interface FetchImagesResponse {
+  results: Image[];
+  total_pages: number;
+}
+
 function App() {
-  const [images, setImages] = useState([]);
-  const [query, setQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalInfo, setModalInfo] = useState({
+  const [images, setImages] = useState<Image[]>([]);
+  const [query, setQuery] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+  const [modalInfo, setModalInfo] = useState<ModalInfo>({
     src: "",
     alt: "",
   });
@@ -25,13 +44,15 @@ function App() {
     if (!query) return;
 
     const getData = async () => {
-      try {
-        setIsLoading(true);
-        setIsError(false);
-        const response = await fetchImages(query, page);
+      setIsLoading(true);
+      setIsError(false);
 
-        if (page === 1 && response.results.length === 0) {
-          toast.error("No images found. Try again...", {
+      try {
+        const result = await fetchImages(query, page);
+
+        if ("error" in result) {
+          setIsError(true);
+          toast.error(result.error, {
             duration: 2000,
             style: {
               border: "1px solid #713200",
@@ -39,20 +60,41 @@ function App() {
               color: "#713200",
             },
           });
-        }
+        } else {
+          const response = result as FetchImagesResponse;
+          if (page === 1 && response.results.length === 0) {
+            toast.error("No images found. Try again...", {
+              duration: 2000,
+              style: {
+                border: "1px solid #713200",
+                padding: "8px",
+                color: "#713200",
+              },
+            });
+          }
 
-        setImages((prevImages) => [...prevImages, ...response.results]);
-        setTotalPages(response.total_pages);
+          setImages((prevImages) => [...prevImages, ...response.results]);
+          setTotalPages(response.total_pages);
+        }
       } catch (error) {
         setIsError(true);
+        toast.error("Failed to fetch images", {
+          duration: 2000,
+          style: {
+            border: "1px solid #713200",
+            padding: "8px",
+            color: "#713200",
+          },
+        });
       } finally {
         setIsLoading(false);
       }
     };
+
     getData();
   }, [query, page]);
 
-  const handleSearch = (newQuery) => {
+  const handleSearch = (newQuery: string) => {
     setQuery(newQuery);
     setPage(1);
     setImages([]);
@@ -60,7 +102,7 @@ function App() {
     setTotalPages(0);
   };
 
-  const openModal = (src, alt) => {
+  const openModal = (src: string, alt: string) => {
     setModalIsOpen(true);
     setModalInfo({ src, alt });
   };

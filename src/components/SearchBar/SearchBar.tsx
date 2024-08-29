@@ -1,9 +1,16 @@
+import { FormEvent } from "react";
 import toast from "react-hot-toast";
 
-export default function SearchBar({ setQuery }) {
-  const handleSubmit = (e) => {
+interface SearchBarProps {
+  setQuery: (query: string) => void;
+}
+
+export default function SearchBar({ setQuery }: SearchBarProps) {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const query = e.target.elements.search.value.trim();
+    const query = (
+      e.currentTarget.elements.namedItem("search") as HTMLInputElement
+    ).value.trim();
     const notify = () =>
       toast.error("Please enter your query", {
         duration: 2000,
@@ -18,7 +25,7 @@ export default function SearchBar({ setQuery }) {
       return;
     }
     setQuery(query);
-    e.target.reset();
+    e.currentTarget.reset();
   };
 
   return (

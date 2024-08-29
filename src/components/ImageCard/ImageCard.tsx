@@ -1,6 +1,17 @@
 import s from "./ImageCard.module.css";
 
-export default function ImageCard({ item, openModal }) {
+interface ImageCardProps {
+  item: {
+    urls: {
+      small: string;
+      regular: string;
+    };
+    alt_description: string;
+  };
+  openModal: (src: string, alt: string) => void;
+}
+
+export default function ImageCard({ item, openModal }: ImageCardProps) {
   return (
     <div>
       <img
